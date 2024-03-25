@@ -1,2 +1,4 @@
 *.pth
 *.pyc
+*.pyd
+./pysot/models/head/dcn/build/

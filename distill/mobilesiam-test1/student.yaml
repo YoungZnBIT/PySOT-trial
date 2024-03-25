@@ -1,0 +1,16 @@
+
+BACKBONE:
+    TYPE: "RepVGG-A0"
+    KWARGS:
+        last_layer: ['stage2', 'stage3']
+        freeze_bn: False
+        strides: [2, 2, 2, 1, 1]
+        num_blocks: [2, 4, 8, 1]
+    OUTPUT_CHANNELS: 288  # 96 + 192
+    PRETRAINED: 'pretrained_models/repvgg-a0-baseline.pth'
+    TRAIN_LAYERS: [ 'stage0', 'stage1', 'stage2', 'stage3' ]
+    TRAIN_EPOCH: 0
+    LAYERS_LR: 0.1 # 0.1
+
+TRAIN:
+    PRETRAINED: '' # 'experiments/mobilesiam/a0/checkpoint_e40.pth'

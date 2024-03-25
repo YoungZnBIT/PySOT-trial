@@ -1,0 +1,75 @@
+META_ARC: "updmobilesiam"
+
+AMP: False
+MODE: 'trial-weighted'
+SELF_EPOCH: 32
+TRIAL_CFG: 'experiments/mobilesiam/test.yaml'
+VALIDATE: True
+VALIDATE_CFG: 'experiments/mobilesiam/mobile-val.yaml'
+MULTI_TEMP: True
+
+BACKBONE:
+    TYPE: "RepVGG-A0"
+    KWARGS:
+        last_layer: ['stage2', 'stage3']
+        freeze_bn: False
+        strides: [2, 2, 2, 1, 1]
+        num_blocks: [2, 4, 8, 1]
+    OUTPUT_CHANNELS: 288  # 96 + 192
+    PRETRAINED: 'pretrained_models/repvgg_a0-distill.pth'  # 'pretrained_models/RepVGG-A2-train.pth'
+    TRAIN_LAYERS: []
+    TRAIN_EPOCH: 100 # 10
+    LAYERS_LR: 0.1 # 0.1
+
+POINT:
+    STRIDE: 8
+
+TRACK:
+    TYPE: 'UPDMobileSiam'
+    EXEMPLAR_SIZE: 128
+    INSTANCE_SIZE: 256
+    BASE_SIZE: 8
+
+    CONTEXT_AMOUNT: 0.5063052
+    WINDOW_INFLUENCE: 0.4445851
+    PENALTY_K: 0.0612060
+    LR: 0.5036626
+
+    CONFIDENCE: 0.7157599
+    UPDATE_FREQ: 6
+
+TRAIN:
+    SEARCH_SIZE: 256
+    OUTPUT_SIZE: 32
+    EXEMPLAR_SIZE: 128
+    ZF_SIZE: 16
+    TEMP_SIZE: 8
+
+    NUM_CONVS: 4
+    NUM_CHANNELS: 256
+
+    PRETRAINED: ''
+    NUM_WORKERS: 16
+    BATCH_SIZE: 8  # 32
+    PRINT_FREQ: 20
+    LOG_GRADS: False
+    LOG_DIR: './logs'
+    SNAPSHOT_DIR: './snapshot/Mobile-LT/'
+
+    START_EPOCH: 0 #
+    RESUME: '' #  or ''
+
+    EPOCH: 40
+    BASE_LR: 0.0001
+    LR:
+        TYPE: 'log'
+        KWARGS:
+            start_lr: 0.0001
+            end_lr: 0.000001
+    LR_WARMUP:
+        TYPE: 'step'
+        EPOCH: 4
+        KWARGS:
+            start_lr: 0.00004
+            end_lr: 0.0001
+            step: 1

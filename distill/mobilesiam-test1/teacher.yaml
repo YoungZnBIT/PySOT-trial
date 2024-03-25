@@ -1,0 +1,70 @@
+META_ARC: "mobilesiam"
+
+AMP: False
+MODE: 'trial-weighted'
+SELF_EPOCH: 50
+TRIAL_CFG: 'distill/mobilesiam-test1/trial-settings.yaml'
+VALIDATE: True
+VALIDATE_CFG: 'distill/mobilesiam-test1/val-settings.yaml'
+
+BACKBONE:
+    TYPE: "RepVGG-A2"
+    KWARGS:
+        last_layer: ['stage2', 'stage3']
+        freeze_bn: True
+        strides: [2, 2, 2, 1, 1]
+        num_blocks: [2, 4, 8, 1]
+    OUTPUT_CHANNELS: 576  # 192 + 384
+    PRETRAINED: ''
+    TRAIN_LAYERS: []
+    TRAIN_EPOCH: 100 # 10
+    LAYERS_LR: 0.1 # 0.1
+
+POINT:
+    STRIDE: 8
+
+TRACK:
+    TYPE: 'MobileSiam'
+    WINDOW_INFLUENCE: 0.4632532824922313  # VOT2018
+    PENALTY_K: 0.08513642556896711  # VOT2018
+    LR: 0.44418184746462425  # VOT2018
+    CONTEXT_AMOUNT: 0.5
+    EXEMPLAR_SIZE: 128
+    INSTANCE_SIZE: 256
+    BASE_SIZE: 8
+
+TRAIN:
+    SEARCH_SIZE: 256
+    OUTPUT_SIZE: 32
+    EXEMPLAR_SIZE: 128
+    ZF_SIZE: 16
+    TEMP_SIZE: 8
+
+    NUM_CONVS: 4
+    NUM_CHANNELS: 256
+
+    PRETRAINED: 'experiments/mobilesiam/mobilesiam-a2.pth'  # 'siamban/model.pth'
+    BATCH_SIZE: 32 # 32
+    PRINT_FREQ: 20
+    NUM_WORKERS: 16
+    LOG_GRADS: False
+    LOG_DIR: './logs'
+    SNAPSHOT_DIR: './snapshot/Mobile-distill/'
+
+    START_EPOCH: 0 #
+    RESUME: '' #
+
+    EPOCH: 40
+    BASE_LR: 0.0001
+    LR:
+        TYPE: 'log'
+        KWARGS:
+            start_lr: 0.0001
+            end_lr: 0.000001
+    LR_WARMUP:
+        TYPE: 'step'
+        EPOCH: 4
+        KWARGS:
+            start_lr: 0.00004
+            end_lr: 0.0001
+            step: 1
